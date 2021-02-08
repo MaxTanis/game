@@ -4,6 +4,8 @@ function setup() {
   createCanvas(600, 600);
 }
 
+
+//functie om alle schermen te tekenen
 function draw() {
   if (screen == 0) {
     startScreen()
@@ -11,11 +13,12 @@ function draw() {
   if (screen == 1) {
     levelScreen()
   }
-  if (screen == 2) {
+  if (screen == 3) {
     Level1()
   }
 }
 
+//beginscherm
 function startScreen() {
   background(96, 157, 255);
   fill(255)
@@ -24,6 +27,8 @@ function startScreen() {
   text('click to start', width / 2, height / 2 + 20);
 }
 
+
+//overzicht scherm
 function levelScreen() {
   // print(mouseX, mouseY)
   background(255);
@@ -58,18 +63,23 @@ function levelScreen() {
   text('Back', 282.5 ,450)
 }
 
+//eerste level
 function Level1() {
   background(0,0,0)
 }
 
+//functie om van scherm te wisselen
 function mousePressed() {
   if (screen == 0) {
     screen = 1
   } else if (screen == 1) {
+    screen = 2
+  } else if (screen == 2) {
     if (mouseX > 50,
     mouseX < 150,
     mouseY > 50,
     mouseY < 100)
-    screen = 2
+    screen = 3
+    cursor(HAND)
   }
 }
