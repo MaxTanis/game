@@ -66,9 +66,24 @@ function levelScreen() {
   text('Back', 282.5 ,450)
 }
 
+function Move(x,y) {
+  
+}
+
+let x = 60
+let y = 525
 //eerste level
 function Level1() {
   background(0,255,0)
+  fill(0,0,0)
+  rect(0, 550, 600, 20)
+  if (keyIsDown(LEFT_ARROW) && (x > 0)) {
+    x -= 5;
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    x += 5;
+  }
+  ellipse(x,y,50,50)
 }
 
 function Level2() {
@@ -90,6 +105,10 @@ function mousePressed() {
     mouseY > 50 &&
     mouseY < 100) {
       screen = 3
-    }
+    } else if (mouseX >232.5 && 
+    mouseX < 332.5 && 
+    mouseY > 400 && 
+    mouseY < 450)
+      screen = 0
   }
 }
