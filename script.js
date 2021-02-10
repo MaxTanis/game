@@ -16,6 +16,9 @@ function draw() {
   if (screen == 2) {
     Level1()
   }
+  if (screen == 3) {
+    Level2()
+  }
 }
 
 //beginscherm
@@ -65,7 +68,11 @@ function levelScreen() {
 
 //eerste level
 function Level1() {
-  background(0,0,0)
+  background(0,255,0)
+}
+
+function Level2() {
+  background(255,0,0)
 }
 
 //functie om van scherm te wisselen
@@ -73,10 +80,16 @@ function mousePressed() {
   if (screen == 0) {
     screen = 1
   } else if (screen == 1) {
-    if (mouseX > 50,
-    mouseX < 150,
-    mouseY > 50,
-    mouseY < 100)
-    screen = 2
+    if (mouseX > 50 &&
+    mouseX < 150 &&
+    mouseY > 50 &&
+    mouseY < 100) {
+      screen = 2
+    } else if (mouseX > 175 &&
+    mouseX < 275 &&
+    mouseY > 50 &&
+    mouseY < 100) {
+      screen = 3
+    }
   }
 }
