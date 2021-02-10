@@ -13,7 +13,7 @@ function draw() {
   if (screen == 1) {
     levelScreen()
   }
-  if (screen == 3) {
+  if (screen == 2) {
     Level1()
   }
 }
@@ -73,13 +73,10 @@ function mousePressed() {
   if (screen == 0) {
     screen = 1
   } else if (screen == 1) {
-    screen = 2
-  } else if (screen == 2) {
     if (mouseX > 50,
     mouseX < 150,
     mouseY > 50,
     mouseY < 100)
-    screen = 3
-    cursor(HAND)
+    screen = 2
   }
 }
