@@ -3,12 +3,12 @@ var screen = 0
 let song;
 
 function preload() {
-  soundFormats('mp3', 'ogg');
-  song = loadSound(' song.mp ');
+  song = loadSound('song.mp3 ');
 }
 
 function setup() {
   createCanvas(600, 600);
+  //song.loop(); 
   song.play();
 }
 
