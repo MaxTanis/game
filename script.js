@@ -1,9 +1,16 @@
 var screen = 0
 
-function setup() {
-  createCanvas(600, 600);
+let song;
+
+function preload() {
+  soundFormats('mp3', 'ogg');
+  song = loadSound(' song.mp ');
 }
 
+function setup() {
+  createCanvas(600, 600);
+  song.play();
+}
 
 //functie om alle schermen te tekenen
 function draw() {
