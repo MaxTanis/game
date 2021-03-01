@@ -1,6 +1,10 @@
 var screen = 0
 
 let song;
+let ele;
+let buttonh;
+let buttonz;
+let muziekvolume = 0,0 ;
 
 function preload() {
   song = loadSound('song.mp3 ');
@@ -9,7 +13,23 @@ function preload() {
 function setup() {
   createCanvas(600, 600);
   //song.loop(); 
-  song.play();
+  ele = createAudio('song.mp3');
+  buttonh = createButton('Hardere muziek');
+  buttonh.position(160, 19);
+  buttonh.mousePressed(muziekvolume += 0,5);
+  buttonz = createButton('Zachtere muziek');
+  buttonz.position(19, 19);
+  buttonz.mousePressed(muziekvolume -= 0,1);
+}
+
+
+
+function mouseClicked() {
+  // Here we call the volume() function
+  // on the sound element to set its volume
+  // Volume must be between 0.0 and 1.0
+  ele.volume(muziekvolume);
+  ele.play();
 }
 
 //functie om alle schermen te tekenen
