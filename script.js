@@ -4,24 +4,47 @@ let song;
 let ele;
 let buttonh;
 let buttonz;
-let muziekvolume = 0,0 ;
+let muziekvolume = 0.0;
+let bg;
+muziekvolume.toFixed(3); 
 
 function preload() {
   song = loadSound('song.mp3 ');
 }
 
 function setup() {
-  createCanvas(600, 600);
-  //song.loop(); 
+  createCanvas(windowWidth, windowHeight);
+  bg = loadImage("Background.png")
   ele = createAudio('song.mp3');
   buttonh = createButton('Hardere muziek');
   buttonh.position(160, 19);
-  buttonh.mousePressed(muziekvolume += 0,5);
+  buttonh.mousePressed(volumeUp);
   buttonz = createButton('Zachtere muziek');
   buttonz.position(19, 19);
-  buttonz.mousePressed(muziekvolume -= 0,1);
+  buttonz.mousePressed(volumedown);
 }
 
+function volumeUp(){
+  if(muziekvolume < 0.9){
+    muziekvolume += 0.1;
+    print(muziekvolume);
+  }
+  else{
+    muziekvolume == 1;
+    print("hoi");
+  }
+}
+
+function volumedown(){
+  if(muziekvolume > 0.1){
+    muziekvolume -= 0.1;
+    print(muziekvolume);
+  }
+  else{
+    muziekvolume == 0;
+    print("doei");
+  }
+}
 
 
 function mouseClicked() {
@@ -34,6 +57,9 @@ function mouseClicked() {
 
 //functie om alle schermen te tekenen
 function draw() {
+ 
+
+  
   if (screen == 0) {
     startScreen()
   }
@@ -46,10 +72,14 @@ function draw() {
   if (screen == 3) {
     Level2()
   }
+  if (screen == 99) {
+    pauseScreen()
+  }
 }
 
 //beginscherm
 function startScreen() {
+//  resizeCanvas(600,600)
   background(96, 157, 255);
   fill(255)
   textAlign(CENTER);
@@ -60,7 +90,6 @@ function startScreen() {
 
 //overzicht scherm
 function levelScreen() {
-  // print(mouseX, mouseY)
   background(255);
   textSize(32)
   // eerste rij
@@ -97,24 +126,58 @@ function Move(x,y) {
   
 }
 
+function pauseScreen(){
+background(128,128,128)
+if (keyIsDown(ESCAPE)) {
+    button1 = createButton('Levels')
+    button1.position(150,300)
+    button2 = createButton('Opnieuw')
+    button2.position(450,300)
+
+  }
+}
+
 let x = 60
 let y = 525
 //eerste level
 function Level1() {
-  background(0,255,0)
+  //createCanvas(1700, 600)
+  background(bg)
   fill(0,0,0)
   rect(0, 550, 600, 20)
+  if (keyIsDown(ESCAPE)) {
+    screen = 99
+  }
   if (keyIsDown(LEFT_ARROW) && (x > 0)) {
     x -= 5;
-  }
+  } 
   if (keyIsDown(RIGHT_ARROW)) {
+    if (x < 1700) {
     x += 5;
+    }
+  }
+  if(keyIsDown(UP_ARROW)) {
+    if(y > 400){
+    y -=20;
+  }
+  else{y+=20;}
   }
   ellipse(x,y,50,50)
 }
 
 function Level2() {
   background(255,0,0)
+  fill(0,0,0)
+  rect(0, 550, 600, 20)
+  if (keyIsDown(LEFT_ARROW) && (x > 0)) {
+    x -= 5;
+  } 
+  if (keyIsDown(RIGHT_ARROW)) {
+    if (x < 300) {
+    x += 5;
+    }
+  }
+  ellipse(x,y,50,50)
 }
 
 //functie om van scherm te wisselen
