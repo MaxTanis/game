@@ -136,15 +136,23 @@ if (keyIsDown(ESCAPE)) {
 
   }
 }
-
+//player variabelen
 let x = 60
 let y = 525
+let pwidth = 50
+let pheight = 50
+
 //eerste level
 function Level1() {
   //createCanvas(1700, 600)
   background(bg)
-  fill(0,0,0)
+  fill(255,255,255)
+  //platform
+  let grondx = 0 
+  let grondy = 550
+  let 
   rect(0, 550, 600, 20)
+  //bewegen player
   if (keyIsDown(ESCAPE)) {
     screen = 99
   }
@@ -156,13 +164,10 @@ function Level1() {
     x += 5;
     }
   }
-  if(keyIsDown(UP_ARROW)) {
-    if(y > 400){
-    y -=20;
-  }
-  else{y+=20;}
-  }
-  ellipse(x,y,50,50)
+  if(keyCode === UP_ARROW) {
+    y -= 10
+  }  
+  ellipse(x,y,pwidth,pheight)
 }
 
 function Level2() {
