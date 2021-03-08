@@ -141,27 +141,45 @@ let x = 60
 let y = 525
 let pwidth = 50
 let pheight = 50
+var speed = 10;
 
 //eerste level
 function Level1() {
   //createCanvas(1700, 600)
   background(bg)
   fill(255,255,255)
+
   //platform
-  let grondx = 0 
-  let grondy = 550
-  let 
-  rect(0, 550, 600, 20)
+  var grondx = 0; 
+  var grondy = 550;
+  var grondwidht = 600;
+  var grondheight = 20;
+  rect(grondx, grondy, grondwidht, grondheight)
+
+  var platformx = 600;
+  var platformy = 300;
+  var platformwidth = 50;
+  var platformheight = 300;
+  rect(platformx,platformy,platformwidth,platformheight)
+
+  //collisions
+  if (x > platformx-platformwidth/2 && x < platformx+platformwidth/2 && y > platformy-platformheight && y < platformy+platformheight){
+    speed = speed*-1;
+  }
+  else{
+    speed = 10;
+  }
+
   //bewegen player
   if (keyIsDown(ESCAPE)) {
     screen = 99
   }
   if (keyIsDown(LEFT_ARROW) && (x > 0)) {
-    x -= 5;
+    x -= speed;
   } 
   if (keyIsDown(RIGHT_ARROW)) {
     if (x < 1700) {
-    x += 5;
+    x += speed;
     }
   }
   if(keyCode === UP_ARROW) {
