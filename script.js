@@ -136,12 +136,14 @@ if (keyIsDown(ESCAPE)) {
 
   }
 }
+
 //player variabelen
-let x = 60
-let y = 525
-let pwidth = 50
-let pheight = 50
+let player_x = 60
+let player_y = 525
+let p_width = 50
+let p_height = 50
 var speed = 10;
+var verwspeed = 10;
 
 //eerste level
 function Level1() {
@@ -150,42 +152,69 @@ function Level1() {
   fill(255,255,255)
 
   //platform
-  var grondx = 0; 
-  var grondy = 550;
-  var grondwidht = 600;
-  var grondheight = 20;
-  rect(grondx, grondy, grondwidht, grondheight)
+  var grond_x = 0; 
+  var grond_y = 550;
+  var grond_widht = 1000;
+  var grond_height = 20;
+  rect(grond_x, grond_y, grond_widht, grond_height)
 
-  var platformx = 600;
-  var platformy = 300;
-  var platformwidth = 50;
-  var platformheight = 300;
-  rect(platformx,platformy,platformwidth,platformheight)
+
+  var rx = 600;
+  var ry = 450;
+  var rw = 50;
+  var rh = 100;
+  rect(rx,ry,rw,rh)
+
+
+
 
   //collisions
-  if (x > platformx-platformwidth/2 && x < platformx+platformwidth/2 && y > platformy-platformheight && y < platformy+platformheight){
-    speed = speed*-1;
-  }
+  if (player_x+p_width/2+verwspeed > rx-rw/2 &&
+    player_x-p_width/2-verwspeed < rx+rw/2 &&
+    player_y > ry-rh &&
+    player_y < ry+rh){
+    speed=0;
+    if (player_x < rx){         
+      player_x = rx-rw/2-p_width/2;     // left edge
+    }
+    else if (player_x > rx){ 
+      player_x = rx+rw/2+p_width/2  
+    }   // right edge
+
+    if (player_y < ry){         
+      player_y = ry-rh       // top edge
+    }
+    else if (player_y > ry+rh){ 
+      player_y = ry+rh 
+    }   // bottom edge
+    
+  
   else{
     speed = 10;
+  }
   }
 
   //bewegen player
   if (keyIsDown(ESCAPE)) {
     screen = 99
   }
-  if (keyIsDown(LEFT_ARROW) && (x > 0)) {
-    x -= speed;
+  if (keyIsDown(LEFT_ARROW) && (player_x > 0)) {
+    player_x -= speed;
   } 
   if (keyIsDown(RIGHT_ARROW)) {
-    if (x < 1700) {
-    x += speed;
+    if (player_x < 1700) {
+    player_x += speed;
     }
   }
   if(keyCode === UP_ARROW) {
-    y -= 10
+    if(player_y > 400){
+    player_y -= 10
+    }
+    if(player_y == 400){
+      player_y += 10
+    }
   }  
-  ellipse(x,y,pwidth,pheight)
+  ellipse(player_x,player_y,p_width,p_height)
 }
 
 function Level2() {
