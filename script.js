@@ -147,22 +147,23 @@ var verwspeed = 10;
 
 let blocks = [];
 
+  var grond_x = 0; 
+  var grond_y = 550;
+
 //eerste level
 function Level1() {
-  //createCanvas(1700, 600)
   background(bg)
   fill(255,255,255)
 
   //platform
-  var grond_x = 0; 
-  var grond_y = 550;
-  var grond_widht = 1000;
+
+  var grond_widht = windowWidth;
   var grond_height = 20;
   rect(grond_x, grond_y, grond_widht, grond_height)
 
   rect1 = {x:700, y:450, w:50, h:100};
-  rect2 = {x:800, y:450, w:50, h:100};
-  rect3 = {x:900, y:450, w:50, h:100};
+  rect2 = {x:900, y:450, w:50, h:100};
+  rect3 = {x:1100, y:450, w:50, h:100};
   blocks.push(rect1);
   blocks.push(rect2);
   blocks.push(rect3);
@@ -172,8 +173,11 @@ function Level1() {
   });	
 
   if(player_x >= 0 && player_x + 50 <= grond_widht){
+      if(!isColliding())
         player_x += xspeed;
-  }
+      else if(isColliding())
+        player_x -= 5;
+  } 
 
 	if(player_y >= 0 && player_y + 50 <= 600){
       player_y += yspeed;
@@ -268,16 +272,16 @@ function isColliding(){
     let bottom = block.y + block.h;
     let right = block.x + block.w;
     let height = player_y + 50;
-    let width = player_x + 50;
+    let width = player_x + block.w/2;
 
-    let bottomCollision = player_y > block.y && player_y + 50 < grond_y;
+    let bottomCollision = player_y > block.y && player_y < bottom;
     let topCollision = height > block.y && height < bottom;
 
     // horizontaal
     if(bottomCollision || topCollision){
       
       let leftCollision = player_x > block.x && player_x < right;
-      let rightCollision    = width > block.x && width < right;
+      let rightCollision = width > block.x && width < right;
       
       //verticaal        
       if(leftCollision || rightCollision){
