@@ -12,9 +12,13 @@ function preload() {
   song = loadSound('song.mp3 ');
 }
 
+
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   bg = loadImage("Background.png")
+  stone = loadImage('stone.jpg')
+  character = loadImage('poppetje.jpg')
   ele = createAudio('song.mp3');
   buttonh = createButton('Hardere muziek');
   buttonh.position(160, 19);
@@ -44,7 +48,6 @@ function volumedown(){
   }
 }
 
-
 function mouseClicked() {
   // Here we call the volume() function
   // on the sound element to set its volume
@@ -56,8 +59,6 @@ function mouseClicked() {
 //functie om alle schermen te tekenen
 function draw() {
  
-
-  
   if (screen == 0) {
     startScreen()
   }
@@ -137,89 +138,161 @@ if (keyIsDown(ESCAPE)) {
 
 //player variabelen
 let player_x = 60
-let player_y = 525
-let xspeed = 0
-let yspeed = 0
+let player_y = 500
 let p_width = 50
 let p_height = 50
-var speed = 10;
-var verwspeed = 10;
+
+//platform
+var grond_x = 0; 
+var grond_y = 550;
+
+//snelheid blok
+let xspeed = 0
+let yspeed = 0
+
+let lastX = 0
+let lastY = 0;
+let SPEED = 5;
 
 let blocks = [];
-
-  var grond_x = 0; 
-  var grond_y = 550;
 
 //eerste level
 function Level1() {
   background(bg)
   fill(255,255,255)
-
-  //platform
-
+  
   var grond_widht = windowWidth;
-  var grond_height = 20;
-  rect(grond_x, grond_y, grond_widht, grond_height)
+  var grond_height = 50;
+  image(stone, grond_x, grond_y, grond_widht, grond_height)
 
+  //alle objecten in het level
   rect1 = {x:700, y:450, w:50, h:100};
   rect2 = {x:900, y:450, w:50, h:100};
-  rect3 = {x:1100, y:450, w:50, h:100};
+  rect3 = {x:1300, y:450, w:50, h:100};
+  rect4 = {x:1100, y:450, w:100, h:50};
   blocks.push(rect1);
   blocks.push(rect2);
   blocks.push(rect3);
+  blocks.push(rect4);
 
+  //functie om alle blokken te tekenen
   blocks.forEach(function(block) {
-    rect(block.x,block.y,block.w, block.h);
+    image(stone, block.x,block.y,block.w, block.h);
   });	
 
+  //voor de collision in horizontale richting
   if(player_x >= 0 && player_x + 50 <= grond_widht){
-      if(!isColliding())
-        player_x += xspeed;
-      else if(isColliding())
-        player_x -= 5;
+    if(isColliding()){
+    // when we stop pressing a button, 
+    // speed is 0 so we bounce out of collision
+      if(xspeed == 0)
+        player_x = player_x + (lastX * -1);
+    }
+    else{    
+      player_x += xspeed;
+    // remember last xspeed
+    lastX = xspeed;
+    }           
   } 
 
-	if(player_y >= 0 && player_y + 50 <= 600){
-      player_y += yspeed;
+  //hiermee gaat hij niet door de vloer
+  if(player_y > 500)
+    if(yspeed == 0)
+        player_y = player_y + (lastY * -1);      
+  //voor de collision in verticale richting      
+	if(player_y >= 0 && player_y <= 500){
+    if(isColliding()){
+      if(yspeed == 0)
+        player_y = player_y + (lastY * -1);      
+    } else {
+        player_y += yspeed; 
+      // remember last yspeed 
+        lastY = yspeed;
+    
+    }  
   }  
-  ellipse(player_x,player_y,p_width,p_height)
+  image(character, player_x,player_y,p_width,p_height)
 }
 
 function Level2() {
-  background(255,0,0)
-  fill(0,0,0)
-  rect(0, 550, 600, 20)
-  if (keyIsDown(LEFT_ARROW) && (x > 0)) {
-    x -= 5;
-  } 
-  if (keyIsDown(RIGHT_ARROW)) {
-    if (x < 300) {
-    x += 5;
+  background(bg)
+  fill(255,255,255)
+  
+  var grond_widht = windowWidth;
+  var grond_height = 50;
+  image(stone, grond_x, grond_y, grond_widht, grond_height)
+
+  //alle objecten in het level
+  rect1 = {x:700, y:450, w:50, h:100};
+  blocks.push(rect1);
+
+  //functie om alle blokken te tekenen
+  blocks.forEach(function(block) {
+    image(stone, block.x,block.y,block.w, block.h);
+  });	
+
+  //voor de collision in horizontale richting
+  if(player_x >= 0 && player_x + 50 <= grond_widht){
+    if(isColliding()){
+    // when we stop pressing a button, 
+    // speed is 0 so we bounce out of collision
+      if(xspeed == 0)
+        player_x = player_x + (lastX * -1);
     }
-  }
-  ellipse(x,y,50,50)
+    else{    
+      player_x += xspeed;
+    // remember last xspeed
+    lastX = xspeed;
+    }           
+  } 
+
+  //hiermee gaat hij niet door de vloer
+  if(player_y > 500)
+    if(yspeed == 0)
+        player_y = player_y + (lastY * -1);      
+  //voor de collision in verticale richting      
+	if(player_y >= 0 && player_y <= 500){
+    if(isColliding()){
+      if(yspeed == 0)
+        player_y = player_y + (lastY * -1);      
+    } else {
+        player_y += yspeed; 
+      // remember last yspeed 
+        lastY = yspeed;
+    
+    }  
+  }  
+  image(character, player_x,player_y,p_width,p_height)
 }
 
 function keyPressed() {
-	switch(keyCode) {
-		// naar links
+
+  switch(keyCode) {
+    // naar links
     case 37:
-		case 65:
-      xspeed = -10;
+    case 65:
+      xspeed = -SPEED;
     break;
-		
+    
     // naar rechts
     case 39:
-		case 68:
-			xspeed = 10;
-			break;
+    case 68:
+      xspeed = SPEED;
+      break;
 
     // naar boven
-		case 38:
-		case 87:
-      yspeed = -10;
-			break;
-	}
+    case 38:
+    case 87:
+      yspeed = -SPEED;
+      
+      break;
+    
+    // naar beneden
+    case 40:
+    case 83:
+      yspeed = SPEED;
+    break;
+    }
 }
 
 function keyReleased() {
@@ -236,6 +309,10 @@ function keyReleased() {
 		case 87:
 			yspeed = 0;
 			break;
+    case 40:
+		case 83:
+			yspeed = 0;
+		  break;
 	}
 }
 
@@ -265,30 +342,28 @@ function mousePressed() {
 function isColliding(){
   // normaal gesproken
   colliding = false;
-
-  // voor elk blok controleren of we er niet tegenaan botsen
+    // voor elk blok controleren of we er niet tegenaan botsen
   blocks.forEach(function(block) {
     
     let bottom = block.y + block.h;
     let right = block.x + block.w;
     let height = player_y + 50;
-    let width = player_x + block.w/2;
+    let width = player_x + 50;
 
     let bottomCollision = player_y > block.y && player_y < bottom;
     let topCollision = height > block.y && height < bottom;
 
     // horizontaal
     if(bottomCollision || topCollision){
-      
       let leftCollision = player_x > block.x && player_x < right;
       let rightCollision = width > block.x && width < right;
       
       //verticaal        
       if(leftCollision || rightCollision){
         colliding = true;
-      }            
+      }             
     }
   });
-
   return colliding;
+  
 }
