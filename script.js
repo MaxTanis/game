@@ -138,11 +138,14 @@ if (keyIsDown(ESCAPE)) {
 //player variabelen
 let player_x = 60
 let player_y = 525
+let xspeed = 0
+let yspeed = 0
 let p_width = 50
 let p_height = 50
 var speed = 10;
 var verwspeed = 10;
 
+let blocks = [];
 
 //eerste level
 function Level1() {
@@ -157,8 +160,6 @@ function Level1() {
   var grond_height = 20;
   rect(grond_x, grond_y, grond_widht, grond_height)
 
-  //alle objects hierin
-  let blocks = [];
   rect1 = {x:700, y:450, w:50, h:100};
   rect2 = {x:800, y:450, w:50, h:100};
   rect3 = {x:900, y:450, w:50, h:100};
@@ -170,68 +171,13 @@ function Level1() {
     rect(block.x,block.y,block.w, block.h);
   });	
 
-  var rx = 600;
-  var ry = 450;
-  var rw = 50;
-  var rh = 100;
-  rect(rx,ry,rw,rh)
-
-  /*
-  //collisions
-  if (player_x+p_width/2+verwspeed > rx-rw/2 &&
-    player_x-p_width/2-verwspeed < rx+rw/2 &&
-    player_y > ry-rh &&
-    player_y < ry+rh)
-    {
-    speed=0;
-    if (player_x < rx){         
-      player_x = rx-rw/2-p_width/2;     // left edge
-    }
-    else if (player_x > rx){ 
-      player_x = rx+rw/2+p_width/2  
-    }   // right edge
-
-    if (player_y < ry){         
-      player_y = ry-rh       // top edge
-    }
-    else if (player_y > ry+rh){ 
-      player_y = ry+rh 
-    }   // bottom edge
-    
-  
-  else{
-    speed = 10;
-  }
-  }
-  */
-
-  //bewegen player
-  // if (keyIsDown(ESCAPE)) {
-  //   screen = 99
-  // }
-  // if (keyIsDown(LEFT_ARROW) && (player_x > 0)) {
-  //   player_x -= speed;
-  // } 
-  // if (keyIsDown(RIGHT_ARROW)) {
-  //   if (player_x < 1700) {
-  //   player_x += speed;
-  //   }
-  // }
-  // if(keyCode === UP_ARROW) {
-  //   if(player_y > 400){
-  //   player_y -= 10
-  //   } else if(player_y <= 400){
-  //     player_y += 10
-  //   }
-  // }  
-  if(xpos >= 0 && xpos + 50 <= 500){
-      xpos += xspeed;
+  if(player_x >= 0 && player_x + 50 <= grond_widht){
+        player_x += xspeed;
   }
 
-	if(ypos >= 0 && ypos + 50 <= 500){
-      ypos += yspeed;
+	if(player_y >= 0 && player_y + 50 <= 600){
+      player_y += yspeed;
   }  
-
   ellipse(player_x,player_y,p_width,p_height)
 }
 
@@ -255,27 +201,20 @@ function keyPressed() {
 		// naar links
     case 37:
 		case 65:
-      xspeed = -2;
+      xspeed = -10;
     break;
 		
     // naar rechts
     case 39:
 		case 68:
-			xspeed = 2;
+			xspeed = 10;
 			break;
 
     // naar boven
 		case 38:
 		case 87:
-      yspeed = -2;
-      
+      yspeed = -10;
 			break;
-    
-    // naar beneden
-		case 40:
-		case 83:
-      yspeed = 2;
-    break;
 	}
 }
 
@@ -291,10 +230,6 @@ function keyReleased() {
 			break;
 		case 38:
 		case 87:
-			yspeed = 0;
-			break;
-		case 40:
-		case 83:
 			yspeed = 0;
 			break;
 	}
@@ -332,16 +267,16 @@ function isColliding(){
     
     let bottom = block.y + block.h;
     let right = block.x + block.w;
-    let height = ypos + 50;
-    let width = xpos + 50;
+    let height = player_y + 50;
+    let width = player_x + 50;
 
-    let bottomCollision = ypos > block.y && ypos < bottom;
+    let bottomCollision = player_y > block.y && player_y + 50 < grond_y;
     let topCollision = height > block.y && height < bottom;
 
     // horizontaal
     if(bottomCollision || topCollision){
       
-      let leftCollision = xpos > block.x && xpos < right;
+      let leftCollision = player_x > block.x && player_x < right;
       let rightCollision    = width > block.x && width < right;
       
       //verticaal        
