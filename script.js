@@ -158,15 +158,17 @@ function Level1() {
   rect(grond_x, grond_y, grond_widht, grond_height)
 
   //alle objects hierin
-  let blocks = [
-  rect(700,450,50,100),
-  rect(800,450,50,100)
-  ];
+  let blocks = [];
+  rect1 = {x:700, y:450, w:50, h:100};
+  rect2 = {x:800, y:450, w:50, h:100};
+  rect3 = {x:900, y:450, w:50, h:100};
+  blocks.push(rect1);
+  blocks.push(rect2);
+  blocks.push(rect3);
 
-  //loop over blokken voor collision
-  for (let i = 0; i < blocks.length; i++){
-    
-  }
+  blocks.forEach(function(block) {
+    rect(block.x,block.y,block.w, block.h);
+  });	
 
   var rx = 600;
   var ry = 450;
@@ -174,6 +176,7 @@ function Level1() {
   var rh = 100;
   rect(rx,ry,rw,rh)
 
+  /*
   //collisions
   if (player_x+p_width/2+verwspeed > rx-rw/2 &&
     player_x-p_width/2-verwspeed < rx+rw/2 &&
@@ -200,26 +203,35 @@ function Level1() {
     speed = 10;
   }
   }
+  */
 
   //bewegen player
-  if (keyIsDown(ESCAPE)) {
-    screen = 99
+  // if (keyIsDown(ESCAPE)) {
+  //   screen = 99
+  // }
+  // if (keyIsDown(LEFT_ARROW) && (player_x > 0)) {
+  //   player_x -= speed;
+  // } 
+  // if (keyIsDown(RIGHT_ARROW)) {
+  //   if (player_x < 1700) {
+  //   player_x += speed;
+  //   }
+  // }
+  // if(keyCode === UP_ARROW) {
+  //   if(player_y > 400){
+  //   player_y -= 10
+  //   } else if(player_y <= 400){
+  //     player_y += 10
+  //   }
+  // }  
+  if(xpos >= 0 && xpos + 50 <= 500){
+      xpos += xspeed;
   }
-  if (keyIsDown(LEFT_ARROW) && (player_x > 0)) {
-    player_x -= speed;
-  } 
-  if (keyIsDown(RIGHT_ARROW)) {
-    if (player_x < 1700) {
-    player_x += speed;
-    }
-  }
-  if(keyCode === UP_ARROW) {
-    if(player_y > 400){
-    player_y -= 10
-    } else if(player_y <= 400){
-      player_y += 10
-    }
+
+	if(ypos >= 0 && ypos + 50 <= 500){
+      ypos += yspeed;
   }  
+
   ellipse(player_x,player_y,p_width,p_height)
 }
 
@@ -236,6 +248,56 @@ function Level2() {
     }
   }
   ellipse(x,y,50,50)
+}
+
+function keyPressed() {
+	switch(keyCode) {
+		// naar links
+    case 37:
+		case 65:
+      xspeed = -2;
+    break;
+		
+    // naar rechts
+    case 39:
+		case 68:
+			xspeed = 2;
+			break;
+
+    // naar boven
+		case 38:
+		case 87:
+      yspeed = -2;
+      
+			break;
+    
+    // naar beneden
+		case 40:
+		case 83:
+      yspeed = 2;
+    break;
+	}
+}
+
+function keyReleased() {
+	switch(keyCode) {
+		case 37:
+		case 65:
+			xspeed = 0;
+			break;
+		case 39:
+		case 68:
+			xspeed = 0;
+			break;
+		case 38:
+		case 87:
+			yspeed = 0;
+			break;
+		case 40:
+		case 83:
+			yspeed = 0;
+			break;
+	}
 }
 
 //functie om van scherm te wisselen
@@ -259,4 +321,35 @@ function mousePressed() {
     mouseY < 450)
       screen = 0
   }
+}
+
+function isColliding(){
+  // normaal gesproken
+  colliding = false;
+
+  // voor elk blok controleren of we er niet tegenaan botsen
+  blocks.forEach(function(block) {
+    
+    let bottom = block.y + block.h;
+    let right = block.x + block.w;
+    let height = ypos + 50;
+    let width = xpos + 50;
+
+    let bottomCollision = ypos > block.y && ypos < bottom;
+    let topCollision = height > block.y && height < bottom;
+
+    // horizontaal
+    if(bottomCollision || topCollision){
+      
+      let leftCollision = xpos > block.x && xpos < right;
+      let rightCollision    = width > block.x && width < right;
+      
+      //verticaal        
+      if(leftCollision || rightCollision){
+        colliding = true;
+      }            
+    }
+  });
+
+  return colliding;
 }
