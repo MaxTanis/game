@@ -31,7 +31,6 @@ function volumeUp(){
   }
   else{
     muziekvolume == 1;
-    print("hoi");
   }
 }
 
@@ -42,7 +41,6 @@ function volumedown(){
   }
   else{
     muziekvolume == 0;
-    print("doei");
   }
 }
 
@@ -145,6 +143,7 @@ let p_height = 50
 var speed = 10;
 var verwspeed = 10;
 
+
 //eerste level
 function Level1() {
   //createCanvas(1700, 600)
@@ -158,6 +157,16 @@ function Level1() {
   var grond_height = 20;
   rect(grond_x, grond_y, grond_widht, grond_height)
 
+  //alle objects hierin
+  let blocks = [
+  rect(700,450,50,100),
+  rect(800,450,50,100)
+  ];
+
+  //loop over blokken voor collision
+  for (let i = 0; i < blocks.length; i++){
+    
+  }
 
   var rx = 600;
   var ry = 450;
@@ -165,14 +174,12 @@ function Level1() {
   var rh = 100;
   rect(rx,ry,rw,rh)
 
-
-
-
   //collisions
   if (player_x+p_width/2+verwspeed > rx-rw/2 &&
     player_x-p_width/2-verwspeed < rx+rw/2 &&
     player_y > ry-rh &&
-    player_y < ry+rh){
+    player_y < ry+rh)
+    {
     speed=0;
     if (player_x < rx){         
       player_x = rx-rw/2-p_width/2;     // left edge
@@ -209,8 +216,7 @@ function Level1() {
   if(keyCode === UP_ARROW) {
     if(player_y > 400){
     player_y -= 10
-    }
-    if(player_y == 400){
+    } else if(player_y <= 400){
       player_y += 10
     }
   }  
