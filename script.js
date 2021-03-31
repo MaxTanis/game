@@ -19,6 +19,7 @@ function setup() {
   bg = loadImage("Background.png")
   stone = loadImage('stone.jpg')
   character = loadImage('poppetje.jpg')
+  rays = loadImage('rays.jpg')
   ele = createAudio('song.mp3');
   buttonh = createButton('Hardere muziek');
   buttonh.position(160, 19);
@@ -154,7 +155,13 @@ let lastX = 0
 let lastY = 0;
 let SPEED = 5;
 
+//objecten
 let blocks = [];
+//finish list
+let eindelvl = [];
+//timers
+var eindeTimer = 0;
+var seconds = 0;
 
 //eerste level
 function Level1() {
@@ -166,21 +173,74 @@ function Level1() {
   image(stone, grond_x, grond_y, grond_widht, grond_height)
 
   //alle objecten in het level
-  rect1 = {x:700, y:450, w:50, h:100};
-  rect2 = {x:900, y:450, w:50, h:100};
-  rect3 = {x:1300, y:450, w:50, h:100};
-  rect4 = {x:1100, y:450, w:100, h:50};
+  rect1 = {x:700, y:350, w:50, h:200};
+  rect2 = {x:900, y:350, w:50, h:200};
+  rect3 = {x:1000, y:450, w:100, h:50};
+  rect4 = {x:1200, y:350, w:50, h:200};
+  rect5 = {x:1400, y:450, w:100, h:50};
+  rect6 = {x:1400, y:250, w:100, h:50};
+  rect7 = {x:400, y:450, w:100, h:50};
+  // rect8 = {x:1100, y:450, w:100, h:50};
+  // rect9 = {x:1100, y:450, w:100, h:50};
   blocks.push(rect1);
   blocks.push(rect2);
   blocks.push(rect3);
   blocks.push(rect4);
+  blocks.push(rect5);
+  blocks.push(rect6);
+  blocks.push(rect7);
+  // blocks.push(rect8);
+  // blocks.push(rect9);
+
 
   //functie om alle blokken te tekenen
   blocks.forEach(function(block) {
     image(stone, block.x,block.y,block.w, block.h);
   });	
 
-  //voor de collision in horizontale richting
+
+  //hitbox van het einde van het level
+  recteind = {x:1400, y:200, w:100, h:50};
+  //voor het testen is de onderste handig
+  //recteind = {x:400, y:200, w:100, h:50};
+  eindelvl.push(recteind);
+
+  //functie om het einde van het level te tekenen
+  eindelvl.forEach(function(gebied) {
+    image(rays, gebied.x,gebied.y,gebied.w, gebied.h);
+  });	
+
+  if(eindeisColliding()){
+    eindeTimer = 1;
+  }
+
+  if(eindeTimer == 1){
+    fill(255,255,255);
+    text('Level Passed!', player_x, player_y - 50);
+
+//probeerde een timer te maken
+    // var i=1;
+    // for (i = 1; i < 60000; i++) {
+    //   seconds = i;
+    //   print (i);
+    // }
+
+
+
+    // print (seconds);
+    // if (seconds > 600) {
+    //   seconds = 0;
+    //   eindeTimer = 0;
+    //   i = 0;
+    //   levelScreen();
+    // }
+  }
+  
+    
+  
+
+
+//voor de collision in horizontale richting
   if(player_x >= 0 && player_x + 50 <= grond_widht){
     if(isColliding()){
     // when we stop pressing a button, 
@@ -210,7 +270,8 @@ function Level1() {
         lastY = yspeed;
     
     }  
-  }  
+  } 
+
   image(character, player_x,player_y,p_width,p_height)
 }
 
@@ -365,5 +426,35 @@ function isColliding(){
     }
   });
   return colliding;
+  
+}
+
+// Is het poppetje bij het einde van het level? 
+function eindeisColliding(){
+  // normaal gesproken
+  eindecolliding = false;
+    // voor elk blok controleren of we er niet tegenaan botsen
+  eindelvl.forEach(function(gebied) {
+    
+    let eindebottom = gebied.y + gebied.h;
+    let einderight = gebied.x + gebied.w;
+    let eindeheight = player_y + 50;
+    let eindewidth = player_x + 50;
+
+    let eindebottomCollision = player_y > gebied.y && player_y < eindebottom;
+    let eindetopCollision = eindeheight > gebied.y && eindeheight < eindebottom;
+
+    // horizontaal
+    if(eindebottomCollision || eindetopCollision){
+      let eindeleftCollision = player_x > gebied.x && player_x < einderight;
+      let einderightCollision = eindewidth > gebied.x && eindewidth < einderight;
+      
+      //verticaal        
+      if(eindeleftCollision || einderightCollision){
+        eindecolliding = true;
+      }             
+    }
+  });
+  return eindecolliding;
   
 }
