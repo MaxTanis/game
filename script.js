@@ -1,4 +1,4 @@
-var screen = 2;
+var screen = 0;
 
 let song;
 let ele;
@@ -57,7 +57,7 @@ function mouseClicked() {
 
 //functie om alle schermen te tekenen
 function draw() {
- 
+
   if (screen == 0) {
     startScreen()
   }
@@ -65,9 +65,11 @@ function draw() {
     levelScreen()
   }
   if (screen == 2) {
+    previous_screen = 2;
     Level1()
   }
   if (screen == 3) {
+    previous_screen = 3;
     Level2()
   }
   if (screen == 66) {
@@ -77,6 +79,7 @@ function draw() {
     pauseScreen()
   }
 }
+
 
 //beginscherm
 function startScreen() {
@@ -125,10 +128,10 @@ function levelScreen() {
 function pauseScreen(){
 background(128,128,128)
 if (keyIsDown(ESCAPE)) {
-    button1 = createButton('Levels')
-    button1.position(150,300)
-    button2 = createButton('Opnieuw')
-    button2.position(450,300)
+    button1 = createButton('Levels');
+    button1.position(150,300);
+    button2 = createButton('Opnieuw');
+    button2.position(450,300);
   }
 }
 
@@ -169,13 +172,14 @@ let eindelvl = [];
 var eindeTimer = 0;
 var seconds = 0;
 
-var timer = 5;
 
+var timer = 60;
 //eerste level
 function Level1() {
   background(bg)
   fill(255,255,255)
-  text(timer, 20, 150);
+  
+  text(timer, 60, 150);
   textSize(100);
 
   gravity();
@@ -185,6 +189,7 @@ function Level1() {
   }
   if (timer == 0) {
     screen = 66;
+    timer = 60;
   }
   
   // collision();
@@ -288,6 +293,16 @@ function Level1() {
 function Level2() {
   background(bg)
   fill(255,255,255)
+  text(timer, 60, 150);
+  textSize(100);
+
+  if (frameCount % 60 == 0 && timer > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+    timer --;
+  }
+  if (timer == 0) {
+    screen = 66;
+    timer = 60;
+  }
   
   var grond_widht = windowWidth;
   var grond_height = 50;
@@ -316,9 +331,6 @@ function Level2() {
     lastX = xspeed;
     }           
   } 
-
-  if(isColliding())
-    player_y = player_y - 1
 
   //hiermee gaat hij niet door de vloer
   if(player_y > (grond_y - grond_height))
@@ -359,6 +371,10 @@ function keyPressed() {
     case 87:
       jump = true;
     break;
+
+    case 27:
+      screen = 99;
+      break;
     }
 }
 
@@ -404,7 +420,9 @@ function mousePressed() {
     mouseY > 400 && 
     mouseY < 450)
       screen = 0
-  }
+    } else if (screen == 66){
+      screen = 1;
+    }
 }
 
 function isColliding(){
@@ -423,10 +441,7 @@ function isColliding(){
 
     // horizontaal
     if(bottomCollision || topCollision){
-      if(bottomCollision){
-        velocity = 0;
-        jumpCounter = 0;
-      }
+    
       let leftCollision = player_x > block.x && player_x < right;
       let rightCollision = width > block.x && width < right;
       
@@ -471,9 +486,10 @@ function eindeisColliding(){
 }
 
 function gravity() {
-  if(player_y >= minHeight && jump == false){
+  
+  if((player_y >= minHeight) && jump == false){
     player_y = player_y;
-    jumpCounter = 0;
+    jumpCounter = 0;  
   } else {
     player_y = player_y + (direction * velocity);
   }
@@ -493,6 +509,6 @@ function GameOver(){
   background(0,0,0);
   text("GAME OVER", width/2, height/2);
   fill(255,255,255)
-  textAlign(CENTER);
-  
+  text('click to start again', width / 2, height / 2 + 200);
+
 }
