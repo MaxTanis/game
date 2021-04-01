@@ -12,8 +12,6 @@ function preload() {
   song = loadSound('song.mp3 ');
 }
 
-
-
 function setup() {
   createCanvas(windowWidth, windowHeight);
   bg = loadImage("Background.png")
@@ -87,7 +85,6 @@ function startScreen() {
   text('click to start', width / 2, height / 2 + 20);
 }
 
-
 //overzicht scherm
 function levelScreen() {
   background(255);
@@ -122,10 +119,6 @@ function levelScreen() {
   text('Back', 282.5 ,450)
 }
 
-function Move(x,y) {
-  
-}
-
 function pauseScreen(){
 background(128,128,128)
 if (keyIsDown(ESCAPE)) {
@@ -133,7 +126,6 @@ if (keyIsDown(ESCAPE)) {
     button1.position(150,300)
     button2 = createButton('Opnieuw')
     button2.position(450,300)
-
   }
 }
 
@@ -173,10 +165,10 @@ function Level1() {
   image(stone, grond_x, grond_y, grond_widht, grond_height)
 
   //alle objecten in het level
-  rect1 = {x:700, y:350, w:50, h:200};
-  rect2 = {x:900, y:350, w:50, h:200};
+  rect1 = {x:700, y:350, w:75, h:200};
+  rect2 = {x:900, y:350, w:75, h:200};
   rect3 = {x:1000, y:450, w:100, h:50};
-  rect4 = {x:1200, y:350, w:50, h:200};
+  rect4 = {x:1200, y:350, w:75, h:200};
   rect5 = {x:1400, y:450, w:100, h:50};
   rect6 = {x:1400, y:250, w:100, h:50};
   rect7 = {x:400, y:450, w:100, h:50};
@@ -236,10 +228,6 @@ function Level1() {
     // }
   }
   
-    
-  
-
-
 //voor de collision in horizontale richting
   if(player_x >= 0 && player_x + 50 <= grond_widht){
     if(isColliding()){
@@ -255,12 +243,15 @@ function Level1() {
     }           
   } 
 
+  if(player_y > (grond_y - grond_height))
+    player_y = (grond_y - grond_height)
+    
   //hiermee gaat hij niet door de vloer
-  if(player_y > 500)
+  if(player_y < (grond_y - grond_height))
     if(yspeed == 0)
-        player_y = player_y + (lastY * -1);      
+      player_y = player_y + (lastY * -1);      
   //voor de collision in verticale richting      
-	if(player_y >= 0 && player_y <= 500){
+	if(player_y >= 0 && player_y <= (grond_y - grond_height)){
     if(isColliding()){
       if(yspeed == 0)
         player_y = player_y + (lastY * -1);      
@@ -307,12 +298,15 @@ function Level2() {
     }           
   } 
 
+  if(isColliding())
+    player_y = player_y - 1
+
   //hiermee gaat hij niet door de vloer
-  if(player_y > 500)
+  if(player_y > (grond_y - grond_height))
     if(yspeed == 0)
         player_y = player_y + (lastY * -1);      
   //voor de collision in verticale richting      
-	if(player_y >= 0 && player_y <= 500){
+	if(player_y >= 0 && player_y <= (grond_y - grond_height)){
     if(isColliding()){
       if(yspeed == 0)
         player_y = player_y + (lastY * -1);      
@@ -358,18 +352,27 @@ function keyPressed() {
 
 function keyReleased() {
 	switch(keyCode) {
-		case 37:
+		//naar links
+    case 37:
 		case 65:
 			xspeed = 0;
 			break;
+
+    //naar rechts
 		case 39:
 		case 68:
 			xspeed = 0;
 			break;
+
+    // naar boven   
 		case 38:
 		case 87:
-			yspeed = 0;
-			break;
+      yspeed = 5;
+      if(isColliding())
+        yspeed = 0;
+    break;
+
+    //naar beneden    
     case 40:
 		case 83:
 			yspeed = 0;
