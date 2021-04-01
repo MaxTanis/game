@@ -1,4 +1,4 @@
-var screen = 0
+var screen = 2;
 
 let song;
 let ele;
@@ -6,7 +6,6 @@ let buttonh;
 let buttonz;
 let muziekvolume = 0.0;
 let bg;
-let gravity = 7;
 muziekvolume.toFixed(3); 
 
 function preload() {
@@ -130,6 +129,16 @@ if (keyIsDown(ESCAPE)) {
   }
 }
 
+//gravity
+let jump = false;
+let direction = 1;
+let velocity = 2;
+let jumpPower = 15;
+let fallingSpeed = 2; //gelijk aan velocity
+let minHeight = 500; //gelijk aan grond_y - grond_height
+let maxHeight = 100;
+let jumpCounter = 0;
+
 //player variabelen
 let player_x = 60
 let player_y = 500
@@ -139,12 +148,12 @@ let p_height = 50
 //platform
 var grond_x = 0; 
 var grond_y = 550;
+var grond_widht = 1600;
+var grond_height = 50;
 
-//snelheid blok
+//snelheid player
 let xspeed = 0
-let yspeed = gravity
-    
-
+let yspeed = 0
 let lastX = 0
 let lastY = 0;
 let SPEED = 5;
@@ -161,9 +170,10 @@ var seconds = 0;
 function Level1() {
   background(bg)
   fill(255,255,255)
+
+  gravity();
+  collision();
   
-  var grond_widht = windowWidth;
-  var grond_height = 50;
   image(stone, grond_x, grond_y, grond_widht, grond_height)
 
   //alle objecten in het level
@@ -244,15 +254,7 @@ function Level1() {
     lastX = xspeed;
     }           
   } 
-
-  if(player_y > (grond_y - grond_height))
-    player_y = (grond_y - grond_height)
     
-  //hiermee gaat hij niet door de vloer
-  if(player_y < (grond_y - grond_height))
-    if(yspeed == 0)
-      player_y = player_y + (lastY * -1);      
-  //voor de collision in verticale richting      
 	if(player_y >= 0 && player_y <= (grond_y - grond_height)){
     if(isColliding()){
       if(yspeed == 0)
@@ -261,7 +263,6 @@ function Level1() {
         player_y += yspeed; 
       // remember last yspeed 
         lastY = yspeed;
-    
     }  
   } 
 
@@ -340,13 +341,7 @@ function keyPressed() {
     // naar boven
     case 38:
     case 87:
-      yspeed = -SPEED*gravity;
-    break;
-    
-    // naar beneden
-    case 40:
-    case 83:
-      yspeed = SPEED;
+      jump = true;
     break;
     }
 }
@@ -368,19 +363,9 @@ function keyReleased() {
     // naar boven   
 		case 38:
 		case 87:
-      
-
-      yspeed = gravity;
-      if(isColliding())
-        yspeed = 0;
+      jump = false;
     break;
 
-    //naar beneden    
-    case 40:
-		case 83:
-			yspeed = 0;
-		  break;
-	}
 }
 
 //functie om van scherm te wisselen
@@ -463,4 +448,33 @@ function eindeisColliding(){
   });
   return eindecolliding;
   
+}
+
+function gravity() {
+  if(player_y >= minHeight && jump == false){
+    player_y = player_y;
+    jumpCounter = 0;
+  } else {
+    player_y = player_y + (direction * velocity);
+  }
+  if(jump == true){
+    if(player_y <= maxHeight || jumpCounter >= jumpPower){
+      velocity = fallingSpeed;
+    } else { 
+      velocity = -jumpPower;
+      jumpCounter += 1;
+    }
+  } else {
+    velocity = fallingSpeed;
+  }
+}
+
+function collision(){
+  // collision = false;
+  blocks.forEach(function(block) {
+    if(player_x >= block.x-block.w && player_x <= block.x+block.w && player_y >= block.y-block.h && player_y <=block.y+block.h && jump == false) {
+      velocity = 0;
+      jumpCounter = 0;
+    }
+  })
 }
