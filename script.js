@@ -6,6 +6,7 @@ let buttonh;
 let buttonz;
 let muziekvolume = 0.0;
 let bg;
+let gravity = 7;
 muziekvolume.toFixed(3); 
 
 function preload() {
@@ -141,7 +142,8 @@ var grond_y = 550;
 
 //snelheid blok
 let xspeed = 0
-let yspeed = 0
+let yspeed = gravity
+    
 
 let lastX = 0
 let lastY = 0;
@@ -338,9 +340,8 @@ function keyPressed() {
     // naar boven
     case 38:
     case 87:
-      yspeed = -SPEED;
-      
-      break;
+      yspeed = -SPEED*gravity;
+    break;
     
     // naar beneden
     case 40:
@@ -367,7 +368,9 @@ function keyReleased() {
     // naar boven   
 		case 38:
 		case 87:
-      yspeed = 5;
+      
+
+      yspeed = gravity;
       if(isColliding())
         yspeed = 0;
     break;
