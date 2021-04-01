@@ -70,6 +70,9 @@ function draw() {
   if (screen == 3) {
     Level2()
   }
+  if (screen == 66) {
+    GameOver()
+  }
   if (screen == 99) {
     pauseScreen()
   }
@@ -166,13 +169,25 @@ let eindelvl = [];
 var eindeTimer = 0;
 var seconds = 0;
 
+var timer = 5;
+
 //eerste level
 function Level1() {
   background(bg)
   fill(255,255,255)
+  text(timer, 20, 150);
+  textSize(100);
 
   gravity();
-  collision();
+
+  if (frameCount % 60 == 0 && timer > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+    timer --;
+  }
+  if (timer == 0) {
+    screen = 66;
+  }
+  
+  // collision();
   
   image(stone, grond_x, grond_y, grond_widht, grond_height)
 
@@ -255,6 +270,7 @@ function Level1() {
     }           
   } 
     
+
 	if(player_y >= 0 && player_y <= (grond_y - grond_height)){
     if(isColliding()){
       if(yspeed == 0)
@@ -365,7 +381,7 @@ function keyReleased() {
 		case 87:
       jump = false;
     break;
-
+  }
 }
 
 //functie om van scherm te wisselen
@@ -407,6 +423,10 @@ function isColliding(){
 
     // horizontaal
     if(bottomCollision || topCollision){
+      if(bottomCollision){
+        velocity = 0;
+        jumpCounter = 0;
+      }
       let leftCollision = player_x > block.x && player_x < right;
       let rightCollision = width > block.x && width < right;
       
@@ -457,7 +477,7 @@ function gravity() {
   } else {
     player_y = player_y + (direction * velocity);
   }
-  if(jump == true){
+  if(jump == true && !isColliding()){
     if(player_y <= maxHeight || jumpCounter >= jumpPower){
       velocity = fallingSpeed;
     } else { 
@@ -469,12 +489,10 @@ function gravity() {
   }
 }
 
-function collision(){
-  // collision = false;
-  blocks.forEach(function(block) {
-    if(player_x >= block.x-block.w && player_x <= block.x+block.w && player_y >= block.y-block.h && player_y <=block.y+block.h && jump == false) {
-      velocity = 0;
-      jumpCounter = 0;
-    }
-  })
+function GameOver(){
+  background(0,0,0);
+  text("GAME OVER", width/2, height/2);
+  fill(255,255,255)
+  textAlign(CENTER);
+  
 }
