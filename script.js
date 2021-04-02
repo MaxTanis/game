@@ -67,8 +67,6 @@ function draw() {
   if (screen == 1) {
     levelScreen();
     eindeTimer = 0;
-
-
   }
   if (screen == 2) {
     previous_screen = 2;
@@ -97,8 +95,6 @@ function draw() {
     pauseScreen()
   }
 }
-
-
 //beginscherm
 function startScreen() {
 //  resizeCanvas(600,600)
@@ -151,26 +147,29 @@ function levelScreen() {
       foutmelding = 0;
     }
   }
-  
-  
+ 
 }
+var welkpaus = 1;
 
 function pauseScreen(){
 background(128,128,128)
-if (keyIsDown(ESCAPE)) {
-    button1 = createButton('Levels');
-    button1.position(150,300);
-    button2 = createButton('Opnieuw');
-    button2.position(450,300);
-  }
+  rect(141,291,45,22)
+  rect(442,291,67,22)
+  fill(0,0,0)
+
+  text('levels',165, 310)
+  text('resume',475,310)
+  textSize(15)
+  fill(255,255,255)
+
 }
 
 //gravity
 let jump = false;
 let direction = 1;
-let velocity = 2;
+let velocity = 4;
 let jumpPower = 18;
-let fallingSpeed = 2; //gelijk aan velocity
+let fallingSpeed = 4; //gelijk aan velocity
 let minHeight = 500; //gelijk aan grond_y - grond_height
 let maxHeight = 100;
 let jumpCounter = 0;
@@ -223,10 +222,10 @@ function Level1() {
   image(stone, grond_x, grond_y, grond_widht, grond_height)
 
   //alle objecten in het level
-  rect1 = {x:700, y:350, w:75, h:200};
-  rect2 = {x:900, y:350, w:75, h:200};
-  rect3 = {x:1000, y:450, w:100, h:50};
-  rect4 = {x:1200, y:350, w:75, h:200};
+  rect1 = {x:700, y:450, w:75, h:100};
+  rect2 = {x:900, y:450, w:75, h:100};
+  rect3 = {x:1025, y:450, w:100, h:50};
+  rect4 = {x:1200, y:450, w:75, h:100};
   rect5 = {x:1400, y:450, w:100, h:50};
   rect6 = {x:1400, y:250, w:100, h:50};
   rect7 = {x:400, y:450, w:100, h:50};
@@ -429,6 +428,8 @@ function keyPressed() {
     case 27:
       screen = 99;
       break;
+
+
     }
 }
 
@@ -472,13 +473,23 @@ function mousePressed() {
     } else if (mouseX >232.5 && 
     mouseX < 332.5 && 
     mouseY > 400 && 
-    mouseY < 450)
-      screen = 0
+    mouseY < 450){
+      screen = 0;
+    }
     } else if (screen == 66){
       screen = 1;
     } else if (screen == 67){
       screen = 1;
-    }
+    } 
+    else if (screen == 99){ 
+      if(mouseX >141 && mouseX < 196 && mouseY > 291  && mouseY < 313){
+        screen = 1;
+      }
+      if(mouseX >442 && mouseX < 509 && mouseY > 291  && mouseY < 313){
+        screen = previous_screen;
+      }
+    } 
+    
 }
 
 function isColliding(){
@@ -578,7 +589,6 @@ function GameWon(){
   fill(255,255,0)
   text('click to start again', width / 2, height / 2 + 200);
 }
-
 
 function istimer(){
   timerans= false;
