@@ -484,6 +484,12 @@ function mousePressed() {
     else if (screen == 99){ 
       if(mouseX >141 && mouseX < 196 && mouseY > 291  && mouseY < 313){
         screen = 1;
+        player_x = 60;
+        player_y = 500;
+        timer2 = 5;
+        timer = 60;
+        blocks = [];
+        eindelvl = [];
       }
       if(mouseX >442 && mouseX < 509 && mouseY > 291  && mouseY < 313){
         screen = previous_screen;
