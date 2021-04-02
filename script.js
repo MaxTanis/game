@@ -6,6 +6,9 @@ let buttonh;
 let buttonz;
 let muziekvolume = 0.0;
 let bg;
+// foutmelding voor de gebruiker
+var foutmelding = 0;
+
 muziekvolume.toFixed(3); 
 
 function preload() {
@@ -62,7 +65,10 @@ function draw() {
     startScreen()
   }
   if (screen == 1) {
-    levelScreen()
+    levelScreen();
+    eindeTimer = 0;
+
+
   }
   if (screen == 2) {
     previous_screen = 2;
@@ -70,11 +76,23 @@ function draw() {
   }
   if (screen == 3) {
     previous_screen = 3;
-    Level2()
+    if (level1gehaald == 1){
+      Level2()
+    }
+    else{//foutmelding uitzetten na een tijdje
+      foutmelding = 1;
+      screen = 1;
+      }
   }
+    
+  
   if (screen == 66) {
     GameOver()
   }
+  if (screen == 67) {
+    GameWon()
+  }
+  
   if (screen == 99) {
     pauseScreen()
   }
@@ -123,6 +141,18 @@ function levelScreen() {
   text('4', 475, 100)
   
   text('Back', 282.5 ,450)
+//als level twee nog niet is vrijgespeeld komt deze foutmelding op het scherm
+  if(foutmelding ==1){
+    fill(0,0,0);
+    textSize(13);
+    text('Je moet als eerst level 1 halen voordat je dit level kan spelen.', 220, 250);
+    //timer van de foutmelding
+    if (istimer2()){
+      foutmelding = 0;
+    }
+  }
+  
+  
 }
 
 function pauseScreen(){
@@ -139,7 +169,7 @@ if (keyIsDown(ESCAPE)) {
 let jump = false;
 let direction = 1;
 let velocity = 2;
-let jumpPower = 15;
+let jumpPower = 18;
 let fallingSpeed = 2; //gelijk aan velocity
 let minHeight = 500; //gelijk aan grond_y - grond_height
 let maxHeight = 100;
@@ -172,27 +202,23 @@ let eindelvl = [];
 var eindeTimer = 0;
 var seconds = 0;
 
-
 var timer = 60;
+var timer2 = 5;
+//Levels gehaald
+var level1gehaald=0;
+var level2gehaald=0;
+
+
 //eerste level
 function Level1() {
   background(bg)
   fill(255,255,255)
   
-  text(timer, 60, 150);
-  textSize(100);
-
   gravity();
 
-  if (frameCount % 60 == 0 && timer > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
-    timer --;
-  }
-  if (timer == 0) {
+  if(istimer()){
     screen = 66;
-    timer = 60;
   }
-  
-  // collision();
   
   image(stone, grond_x, grond_y, grond_widht, grond_height)
 
@@ -225,8 +251,6 @@ function Level1() {
 
   //hitbox van het einde van het level
   recteind = {x:1400, y:200, w:100, h:50};
-  //voor het testen is de onderste handig
-  //recteind = {x:400, y:200, w:100, h:50};
   eindelvl.push(recteind);
 
   //functie om het einde van het level te tekenen
@@ -234,30 +258,24 @@ function Level1() {
     image(rays, gebied.x,gebied.y,gebied.w, gebied.h);
   });	
 
+//Als het poppetje bij de finish is
   if(eindeisColliding()){
-    eindeTimer = 1;
+   eindeTimer =1;
   }
-
   if(eindeTimer == 1){
     fill(255,255,255);
-    text('Level Passed!', player_x, player_y - 50);
+    textSize(30);
+    text('Level Passed!, Jouw score = ' + score, player_x, player_y - 50);
+    level1gehaald=1;
+    //Resetten variabelen en naar het volgende scherm
+    if(istimer2()){
+      player_x = 60;
+      player_y = 500;
+      screen = 1;
+      blocks = [];
+      eindelvl = [];
 
-//probeerde een timer te maken
-    // var i=1;
-    // for (i = 1; i < 60000; i++) {
-    //   seconds = i;
-    //   print (i);
-    // }
-
-
-
-    // print (seconds);
-    // if (seconds > 600) {
-    //   seconds = 0;
-    //   eindeTimer = 0;
-    //   i = 0;
-    //   levelScreen();
-    // }
+    }  
   }
   
 //voor de collision in horizontale richting
@@ -293,31 +311,71 @@ function Level1() {
 function Level2() {
   background(bg)
   fill(255,255,255)
-  text(timer, 60, 150);
-  textSize(100);
+  
+  gravity();
 
-  if (frameCount % 60 == 0 && timer > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
-    timer --;
-  }
-  if (timer == 0) {
+  if(istimer()){
     screen = 66;
-    timer = 60;
   }
   
-  var grond_widht = windowWidth;
-  var grond_height = 50;
   image(stone, grond_x, grond_y, grond_widht, grond_height)
 
   //alle objecten in het level
-  rect1 = {x:700, y:450, w:50, h:100};
-  blocks.push(rect1);
+  //rect1 = {x:700, y:350, w:75, h:200};
+  rect2 = {x:900, y:350, w:75, h:200};
+  //rect3 = {x:1000, y:450, w:100, h:50};
+  //rect4 = {x:1200, y:350, w:75, h:200};
+  rect5 = {x:1400, y:450, w:100, h:50};
+  rect6 = {x:1400, y:250, w:100, h:50};
+  rect7 = {x:400, y:450, w:100, h:50};
+  // rect8 = {x:1100, y:450, w:100, h:50};
+  // rect9 = {x:1100, y:450, w:100, h:50};
+  //blocks.push(rect1);
+  blocks.push(rect2);
+  //blocks.push(rect3);
+  //blocks.push(rect4);
+  blocks.push(rect5);
+  blocks.push(rect6);
+  blocks.push(rect7);
+  // blocks.push(rect8);
+  // blocks.push(rect9);
+
 
   //functie om alle blokken te tekenen
   blocks.forEach(function(block) {
     image(stone, block.x,block.y,block.w, block.h);
   });	
 
-  //voor de collision in horizontale richting
+
+  //hitbox van het einde van het level
+  recteind = {x:1400, y:200, w:100, h:50};
+  eindelvl.push(recteind);
+
+  //functie om het einde van het level te tekenen
+  eindelvl.forEach(function(gebied) {
+    image(rays, gebied.x,gebied.y,gebied.w, gebied.h);
+  });	
+
+//Als het poppetje bij de finish is
+  if(eindeisColliding()){
+   eindeTimer =1;
+  }
+  if(eindeTimer == 1){
+    fill(255,255,255);
+    textSize(30);
+    text('Level Passed!, Jouw score = ' + score, player_x, player_y - 50);
+    level2gehaald=1;
+    //Resetten variabelen en naar het volgende scherm
+    if(istimer2()){
+      player_x = 60;
+      player_y = 500;
+      screen = 67;
+      blocks = [];
+      eindelvl = [];
+    }  
+  }
+  
+//voor de collision in horizontale richting
   if(player_x >= 0 && player_x + 50 <= grond_widht){
     if(isColliding()){
     // when we stop pressing a button, 
@@ -331,12 +389,8 @@ function Level2() {
     lastX = xspeed;
     }           
   } 
+    
 
-  //hiermee gaat hij niet door de vloer
-  if(player_y > (grond_y - grond_height))
-    if(yspeed == 0)
-        player_y = player_y + (lastY * -1);      
-  //voor de collision in verticale richting      
 	if(player_y >= 0 && player_y <= (grond_y - grond_height)){
     if(isColliding()){
       if(yspeed == 0)
@@ -345,9 +399,9 @@ function Level2() {
         player_y += yspeed; 
       // remember last yspeed 
         lastY = yspeed;
-    
     }  
-  }  
+  } 
+
   image(character, player_x,player_y,p_width,p_height)
 }
 
@@ -422,6 +476,8 @@ function mousePressed() {
       screen = 0
     } else if (screen == 66){
       screen = 1;
+    } else if (screen == 67){
+      screen = 1;
     }
 }
 
@@ -438,7 +494,7 @@ function isColliding(){
 
     let bottomCollision = player_y > block.y && player_y < bottom;
     let topCollision = height > block.y && height < bottom;
-
+    
     // horizontaal
     if(bottomCollision || topCollision){
     
@@ -486,10 +542,10 @@ function eindeisColliding(){
 }
 
 function gravity() {
-  
-  if((player_y >= minHeight) && jump == false){
+  if(player_y >= minHeight && jump == false){
     player_y = player_y;
     jumpCounter = 0;  
+  
   } else {
     player_y = player_y + (direction * velocity);
   }
@@ -500,7 +556,9 @@ function gravity() {
       velocity = -jumpPower;
       jumpCounter += 1;
     }
-  } else {
+  } 
+  
+  else {
     velocity = fallingSpeed;
   }
 }
@@ -511,4 +569,45 @@ function GameOver(){
   fill(255,255,255)
   text('click to start again', width / 2, height / 2 + 200);
 
+}
+
+function GameWon(){
+  background(0,0,0);
+  textSize(100)
+  text("GAME WON", width/2, height/2);
+  fill(255,255,0)
+  text('click to start again', width / 2, height / 2 + 200);
+}
+
+
+function istimer(){
+  timerans= false;
+  text(timer, 60, 150);
+  textSize(100);
+if (frameCount % 60 == 0 && timer > 0 && !eindeisColliding()) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+    timer --;
+  } else if(eindeisColliding()){
+    score = timer;
+    timer -= 0;
+  }
+  if (timer == 0) {
+    timer = 60;
+    timerans = true;
+  }
+  return timerans;
+}
+
+
+function istimer2(){
+  timer2ans= false;
+  if (frameCount % 60 == 0 && timer2 > 0 ) { // if the frameCount  is divisible by 60, then a second has passed. it will stop at 0
+      timer2 --;
+    }
+    
+    if (timer2 == 0) {
+      timer2 = 5;
+      timer = 60;
+      timer2ans = true;
+    }
+  return timer2ans;
 }
