@@ -510,7 +510,7 @@ function isColliding(){
   return colliding;
   
 }
-
+//
 // Is het poppetje bij het einde van het level? 
 function eindeisColliding(){
   // normaal gesproken
