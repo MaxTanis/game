@@ -1,5 +1,3 @@
-//Meneer, omdat er teveel objecten in een level staan gaat de fra
-
 var screen = 0;
 
 let song;
